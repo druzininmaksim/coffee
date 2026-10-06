@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-label="Кофе">
+    <rect width="400" height="300" fill="#292524"/>
+
+    <path d="M186 66 c0 -12 14 -14 14 -26 c0 -7 -5 -10 -9 -13" fill="none" stroke="#fde68a" stroke-width="5" stroke-linecap="round"/>
+    <path d="M214 68 c0 -10 12 -12 12 -22 c0 -6 -4 -9 -8 -12" fill="none" stroke="#fde68a" stroke-width="5" stroke-linecap="round"/>
+
+    <path d="M146 122 h108 v44 a54 54 0 0 1 -108 0 z" fill="#d97706"/>
+    <path d="M254 134 h16 a20 20 0 0 1 0 40 h-16" fill="none" stroke="#d97706" stroke-width="12" stroke-linecap="round"/>
+    <ellipse cx="200" cy="122" rx="54" ry="11" fill="#fde68a" opacity="0.65"/>
+    <ellipse cx="200" cy="122" rx="24" ry="6" fill="#292524" opacity="0.5"/>
+
+    <ellipse cx="200" cy="212" rx="86" ry="14" fill="#d97706" opacity="0.35"/>
+
+    <text x="200" y="258" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#fde68a">
+        Roast &amp; Co
+    </text>
+</svg>

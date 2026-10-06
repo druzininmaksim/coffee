@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-label="Roast &amp; Co">
+    <rect width="400" height="300" fill="#292524"/>
+
+    <circle cx="200" cy="118" r="56" fill="none" stroke="#d97706" stroke-width="6"/>
+    <circle cx="200" cy="118" r="30" fill="#d97706"/>
+    <path d="M186 74 c0 -10 12 -12 12 -22 c0 -6 -4 -9 -8 -11" fill="none" stroke="#fde68a" stroke-width="4" stroke-linecap="round"/>
+    <path d="M212 76 c0 -8 10 -10 10 -18 c0 -5 -3 -8 -6 -10" fill="none" stroke="#fde68a" stroke-width="4" stroke-linecap="round"/>
+
+    <text x="200" y="232" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#fde68a">
+        Roast &amp; Co
+    </text>
+</svg>

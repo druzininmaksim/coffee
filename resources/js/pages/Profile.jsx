@@ -76,6 +76,15 @@ export default function Profile() {
             <div className="mx-auto flex max-w-6xl flex-col gap-6">
                 <h1 className="mb-0 text-3xl font-semibold">Личный кабинет</h1>
 
+                <p className="mb-0">
+                    <Link
+                        to="/orders"
+                        className="font-medium text-amber-500 transition-colors hover:text-amber-400"
+                    >
+                        Мои заказы →
+                    </Link>
+                </p>
+
                 <section className="rounded-lg bg-stone-800 p-6 shadow-md">
                     <h2 className="mb-4 text-xl font-semibold">Мои данные</h2>
                     <div className="grid gap-6 sm:grid-cols-3">
@@ -91,6 +100,22 @@ export default function Profile() {
                             <p className="mb-4 text-sm text-amber-50/60">Телефон</p>
                             <p className="mb-0">{user?.phone || 'не указан'}</p>
                         </div>
+                    </div>
+                </section>
+
+                <section className="rounded-lg bg-stone-800 p-6 shadow-md">
+                    <h2 className="mb-4 text-xl font-semibold">Бонусная программа</h2>
+                    <div className="flex flex-wrap items-center justify-between gap-6">
+                        <div>
+                            <p className="mb-2 text-sm text-amber-50/60">Ваши бонусные баллы</p>
+                            <p className="mb-0 text-3xl font-semibold text-amber-500">
+                                ☕ {Number(user?.bonus_points ?? 0)}
+                            </p>
+                        </div>
+                        <p className="mb-0 max-w-md text-sm text-amber-50/70">
+                            За каждый выполненный заказ мы начисляем 5% от его суммы бонусными баллами.
+                            Баллы копятся автоматически, когда администратор отмечает заказ как выполненный.
+                        </p>
                     </div>
                 </section>
 

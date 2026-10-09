@@ -69,7 +69,7 @@ class ReservationController extends Controller
         $validated = $request->validate([
             'table_id' => ['required', 'integer', 'exists:tables,id'],
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:30'],
+            'phone' => ['required', 'string', 'regex:/^\+?[0-9\s\-\(\)]{10,20}$/'],
             'guests' => ['required', 'integer', 'min:1'],
             'reserved_at' => ['required', 'date', 'after:now'],
             'comment' => ['nullable', 'string', 'max:1000'],

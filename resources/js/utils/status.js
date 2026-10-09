@@ -19,6 +19,34 @@ export function reservationStatus(status) {
 }
 
 /**
+ * Статусы заказа: подпись и классы для бейджа.
+ */
+export const ORDER_STATUSES = {
+    new: { label: 'Новый', badge: 'bg-amber-600 text-stone-900' },
+    preparing: { label: 'Готовится', badge: 'bg-amber-700 text-amber-50' },
+    ready: { label: 'Готов', badge: 'bg-green-700 text-amber-50' },
+    completed: { label: 'Завершён', badge: 'bg-stone-600 text-amber-50' },
+    cancelled: { label: 'Отменён', badge: 'bg-red-800 text-amber-50' },
+};
+
+export const ORDER_STATUS_OPTIONS = Object.entries(ORDER_STATUSES).map(
+    ([value, { label }]) => ({ value, label })
+);
+
+export function orderStatus(status) {
+    return ORDER_STATUSES[status] ?? STATUS_FALLBACK;
+}
+
+export const ORDER_TYPE_LABELS = {
+    pickup: 'Самовывоз',
+    delivery: 'Доставка',
+};
+
+export function orderType(type) {
+    return ORDER_TYPE_LABELS[type] ?? '—';
+}
+
+/**
  * Форматирует дату из API как «ДД.ММ.ГГГГ ЧЧ:ММ» без пересчёта часового пояса,
  * чтобы отображалось ровно то время, которое выбрал гость.
  */

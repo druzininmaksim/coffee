@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
@@ -104,22 +105,32 @@ export default function Reservation() {
             <div className="mx-auto max-w-3xl">
                 <h1 className="mb-4 text-3xl font-semibold">Бронирование столика</h1>
 
-                <ol className="mb-4 flex flex-wrap gap-6">
+                <ol className="mb-2 flex flex-wrap gap-4 md:gap-6">
                     {steps.map((label, index) => {
                         const number = index + 1;
+                        const isDone = step > number;
+                        const isCurrent = step === number;
 
                         return (
-                            <li key={label} className="flex items-center gap-3">
+                            <li key={label} className="flex items-center gap-2">
                                 <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-full font-medium ${
-                                        step >= number
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full font-medium transition-colors ${
+                                        isDone || isCurrent
                                             ? 'bg-amber-600 text-stone-900'
                                             : 'bg-stone-800 text-amber-50/60'
                                     }`}
                                 >
-                                    {number}
+                                    {isDone ? '✓' : number}
                                 </span>
-                                <span className={step >= number ? 'text-amber-50' : 'text-amber-50/60'}>
+                                <span
+                                    className={`text-sm transition-colors md:text-base ${
+                                        isCurrent
+                                            ? 'font-semibold text-amber-50'
+                                            : isDone
+                                              ? 'text-amber-50/80'
+                                              : 'text-amber-50/60'
+                                    }`}
+                                >
                                     {label}
                                 </span>
                             </li>
@@ -127,7 +138,23 @@ export default function Reservation() {
                     })}
                 </ol>
 
+                <div
+                    aria-hidden="true"
+                    className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-stone-800"
+                >
+                    <div
+                        className="h-full rounded-full bg-amber-600 transition-all duration-500"
+                        style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}
+                    />
+                </div>
+
                 <div className="rounded-lg bg-stone-800 p-6 shadow-md">
+                    <motion.div
+                        key={step}
+                        initial={{ opacity: 0, x: 24 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                    >
                     {step === 1 && (
                         <form onSubmit={findTables} className="flex flex-col gap-6">
                             <h2 className="mb-0 text-xl font-semibold">Когда вы придёте?</h2>
@@ -213,7 +240,7 @@ export default function Reservation() {
                                         key={table.id}
                                         type="button"
                                         onClick={() => chooseTable(table)}
-                                        className="rounded-lg bg-stone-900 p-4 text-left shadow-md transition-colors hover:bg-amber-600 hover:text-stone-900"
+                                        className="rounded-lg bg-stone-900 p-4 text-left shadow-md transition-all duration-300 hover:scale-[1.03] hover:bg-amber-600 hover:text-stone-900 hover:shadow-[0_0_0_2px_rgba(217,119,6,0.6)]"
                                     >
                                         <p className="mb-4 text-lg font-semibold">Столик №{table.number}</p>
                                         <p className="mb-0 text-sm">Вместимость: {table.capacity} чел.</p>
@@ -258,7 +285,9 @@ export default function Reservation() {
                                 name="phone"
                                 value={contact.phone}
                                 onChange={handleContactChange}
-                                placeholder="+7 (___) ___-__-__"
+                                placeholder="+7 (999) 123-45-67"
+                                pattern="[0-9+\s\-\(\)]{10,20}"
+                                title="Введите номер телефона в формате +7 (999) 123-45-67"
                                 required
                                 className={inputClass}
                             />
@@ -330,6 +359,7 @@ export default function Reservation() {
                             </div>
                         </div>
                     )}
+                    </motion.div>
                 </div>
             </div>
         </div>

@@ -1,10 +1,62 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import {
+    ArcElement,
+    BarElement,
+    CategoryScale,
+    Chart as ChartJS,
+    Filler,
+    Legend,
+    LineElement,
+    LinearScale,
+    PointElement,
+    Title,
+    Tooltip,
+} from 'chart.js';
+import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import api from '../../api/client';
 import { formatDateTime, reservationStatus } from '../../utils/status';
 
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler,
+);
+
+const baseOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: { labels: { color: '#fef3c7' } },
+    },
+    scales: {
+        x: { ticks: { color: '#a8a29e' }, grid: { color: 'rgba(168, 162, 158, 0.15)' } },
+        y: { ticks: { color: '#a8a29e' }, grid: { color: 'rgba(168, 162, 158, 0.15)' }, beginAtZero: true },
+    },
+};
+
+const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: { labels: { color: '#fef3c7' } },
+    },
+};
+
+const CHART_COLORS = ['#d97706', '#f59e0b', '#fbbf24', '#b45309', '#78350f'];
+
+const dayLabel = (day) => day.slice(5).split('-').reverse().join('.');
+
 export default function AdminDashboard() {
     const [stats, setStats] = useState(null);
+    const [chartData, setChartData] = useState(null);
     const [recent, setRecent] = useState([]);
     const [error, setError] = useState(null);
 
@@ -13,8 +65,9 @@ export default function AdminDashboard() {
             api.get('/admin/reservations'),
             api.get('/admin/leads'),
             api.get('/admin/reviews'),
+            api.get('/admin/stats'),
         ])
-            .then(([reservationsResponse, leadsResponse, reviewsResponse]) => {
+            .then(([reservationsResponse, leadsResponse, reviewsResponse, statsResponse]) => {
                 const reservations = reservationsResponse.data.reservations ?? [];
                 const leads = leadsResponse.data.leads ?? [];
                 const reviews = reviewsResponse.data.reviews ?? [];
@@ -25,8 +78,10 @@ export default function AdminDashboard() {
                     confirmed: reservations.filter((item) => item.status === 'confirmed').length,
                     newLeads: leads.filter((item) => item.status === 'new').length,
                     moderation: reviews.filter((item) => !item.is_published).length,
+                    ...statsResponse.data,
                 });
 
+                setChartData(statsResponse.data);
                 setRecent(reservations.slice(0, 5));
             })
             .catch(() => setError('Не удалось загрузить статистику'));
@@ -38,6 +93,10 @@ export default function AdminDashboard() {
         { label: 'Подтверждено', value: stats?.confirmed, to: '/admin/reservations' },
         { label: 'Новых заявок', value: stats?.newLeads, to: '/admin/leads' },
         { label: 'Отзывов на модерации', value: stats?.moderation, to: '/admin/reviews' },
+        { label: 'Всего заказов', value: stats?.total_orders, to: '/admin/orders' },
+        { label: 'Выручка, ₽', value: stats?.revenue, to: '/admin/orders' },
+        { label: 'Средний чек, ₽', value: stats?.avg_order, to: '/admin/orders' },
+        { label: 'Клиентов', value: stats?.clients, to: '/admin/reservations' },
     ];
 
     return (
@@ -60,6 +119,76 @@ export default function AdminDashboard() {
                     </Link>
                 ))}
             </div>
+
+            {chartData && (
+                <div className="grid gap-6 lg:grid-cols-2">
+                    <section className="rounded-lg bg-stone-800 p-6 shadow-md lg:col-span-2">
+                        <h2 className="mb-4 text-xl font-semibold">Продажи за 7 дней</h2>
+                        <div className="h-64">
+                            <Line
+                                data={{
+                                    labels: chartData.sales_by_day.map((row) => dayLabel(row.day)),
+                                    datasets: [
+                                        {
+                                            label: 'Выручка, ₽',
+                                            data: chartData.sales_by_day.map((row) => row.total),
+                                            borderColor: '#d97706',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                                            fill: true,
+                                            tension: 0.35,
+                                        },
+                                    ],
+                                }}
+                                options={baseOptions}
+                            />
+                        </div>
+                    </section>
+
+                    <section className="rounded-lg bg-stone-800 p-6 shadow-md">
+                        <h2 className="mb-4 text-xl font-semibold">Топ-5 блюд</h2>
+                        <div className="h-64">
+                            {chartData.top_items.length === 0 ? (
+                                <p className="mb-0 text-amber-50/70">Данных пока нет.</p>
+                            ) : (
+                                <Doughnut
+                                    data={{
+                                        labels: chartData.top_items.map((row) => row.name),
+                                        datasets: [
+                                            {
+                                                data: chartData.top_items.map((row) => row.total_quantity),
+                                                backgroundColor: CHART_COLORS,
+                                                borderColor: '#1c1917',
+                                                borderWidth: 2,
+                                            },
+                                        ],
+                                    }}
+                                    options={doughnutOptions}
+                                />
+                            )}
+                        </div>
+                    </section>
+
+                    <section className="rounded-lg bg-stone-800 p-6 shadow-md">
+                        <h2 className="mb-4 text-xl font-semibold">Бронирования за 7 дней</h2>
+                        <div className="h-64">
+                            <Bar
+                                data={{
+                                    labels: chartData.reservations_by_day.map((row) => dayLabel(row.day)),
+                                    datasets: [
+                                        {
+                                            label: 'Броней',
+                                            data: chartData.reservations_by_day.map((row) => row.total),
+                                            backgroundColor: '#d97706',
+                                            borderRadius: 6,
+                                        },
+                                    ],
+                                }}
+                                options={baseOptions}
+                            />
+                        </div>
+                    </section>
+                </div>
+            )}
 
             <section className="rounded-lg bg-stone-800 p-6 shadow-md">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-6">

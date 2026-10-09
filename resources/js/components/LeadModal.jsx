@@ -97,7 +97,9 @@ export default function LeadModal({ open, onClose }) {
                             name="phone"
                             value={form.phone}
                             onChange={handleChange}
-                            placeholder="+7 (___) ___-__-__"
+                            placeholder="+7 (999) 123-45-67"
+                            pattern="[0-9+\s\-\(\)]{10,20}"
+                            title="Введите номер телефона в формате +7 (999) 123-45-67"
                             required
                             className="mb-4 rounded-lg border border-stone-700 bg-stone-900 px-4 py-2 text-amber-50 outline-none focus:border-amber-600"
                         />

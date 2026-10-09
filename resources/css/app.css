@@ -8,3 +8,83 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Тёмный скроллбар */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #57534e #1c1917;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1c1917;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #57534e;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d97706;
+}
+
+/* Анимации */
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-up {
+    animation: fade-up 0.6s ease-out both;
+}
+
+@keyframes float-y {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-14px) rotate(10deg);
+    }
+}
+
+.animate-float {
+    animation: float-y 6s ease-in-out infinite;
+}
+
+@keyframes cta-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.55);
+    }
+
+    50% {
+        box-shadow: 0 0 0 14px rgba(217, 119, 6, 0);
+    }
+}
+
+.animate-cta-pulse {
+    animation: cta-pulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-fade-up,
+    .animate-float,
+    .animate-cta-pulse {
+        animation: none;
+    }
+}
+

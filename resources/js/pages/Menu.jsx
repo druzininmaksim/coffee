@@ -62,7 +62,23 @@ export default function Menu() {
                     ))}
                 </div>
 
-                {isLoading && <p className="text-amber-50/70">Загружаем меню…</p>}
+                {isLoading && (
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {[...Array(6)].map((_, index) => (
+                            <div
+                                key={index}
+                                className="mb-4 overflow-hidden rounded-lg bg-stone-800 shadow-md"
+                            >
+                                <div className="h-48 w-full animate-pulse bg-stone-700" />
+                                <div className="flex flex-col gap-3 p-4">
+                                    <div className="h-5 w-2/3 animate-pulse rounded bg-stone-700" />
+                                    <div className="h-4 w-full animate-pulse rounded bg-stone-700/70" />
+                                    <div className="h-4 w-1/2 animate-pulse rounded bg-stone-700/70" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
                 {error && <p className="text-red-400">{error}</p>}
 
                 {!isLoading && !error && items.length === 0 && (
@@ -70,8 +86,13 @@ export default function Menu() {
                 )}
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((item) => (
-                        <MenuItemCard key={item.id} item={item} />
+                    {items.map((item, index) => (
+                        <MenuItemCard
+                            key={item.id}
+                            item={item}
+                            index={index}
+                            isHit={activeSlug === 'all' && index < 3}
+                        />
                     ))}
                 </div>
             </div>

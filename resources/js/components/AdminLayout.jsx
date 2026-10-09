@@ -7,6 +7,9 @@ const links = [
     { to: '/admin/menu', label: 'Меню' },
     { to: '/admin/tables', label: 'Столики' },
     { to: '/admin/reservations', label: 'Брони' },
+    { to: '/admin/orders', label: 'Заказы' },
+    { to: '/admin/promocodes', label: 'Промокоды' },
+    { to: '/admin/promotions', label: 'Акции' },
     { to: '/admin/reviews', label: 'Отзывы' },
     { to: '/admin/leads', label: 'Заявки' },
 ];

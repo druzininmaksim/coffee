@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../api/client';
 import MenuItemCard from '../components/MenuItemCard';
-import { ABOUT_IMAGE, HERO_IMAGE } from '../utils/format';
+import { ABOUT_IMAGE, HERO_IMAGE, menuImageUrl } from '../utils/format';
 
 const heroFade = {
     hidden: { opacity: 0, y: 24 },
@@ -114,7 +114,7 @@ export default function Home() {
                                 className="flex flex-col overflow-hidden rounded-lg bg-stone-800 shadow-md transition-transform hover:scale-105"
                             >
                                 <img
-                                    src={promotion.image ? `/storage/${promotion.image}` : '/images/placeholder.svg'}
+                                    src={menuImageUrl(promotion.image)}
                                     alt={promotion.title}
                                     loading="lazy"
                                     className="h-40 w-full object-cover"

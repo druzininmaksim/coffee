@@ -39,7 +39,7 @@ class MenuSeeder extends Seeder
 
     /**
      * Десять новых позиций меню: слаг категории => блюда.
-     * Пути к фото — относительно диска public (файлы лежат в storage/app/public/menu).
+     * Пути к фото — от корня сайта (файлы лежат в public/images/menu).
      *
      * @var array<string, array<int, array{name: string, price: int, description: string, image: string}>>
      */
@@ -49,13 +49,13 @@ class MenuSeeder extends Seeder
                 'name' => 'Лавандовый Раф',
                 'price' => 280,
                 'description' => 'Нежный раф с сиропом лаванды',
-                'image' => 'menu/lavender_raf.jpg',
+                'image' => 'images/menu/lavender_raf.jpg',
             ],
             [
                 'name' => 'Эспрессо-тоник',
                 'price' => 290,
                 'description' => 'Освежающий эспрессо с тоником и лаймом',
-                'image' => 'menu/espresso_tonic.jpg',
+                'image' => 'images/menu/espresso_tonic.jpg',
             ],
         ],
         'drinks' => [
@@ -63,19 +63,19 @@ class MenuSeeder extends Seeder
                 'name' => 'Матча Латте',
                 'price' => 300,
                 'description' => 'Трендовый зелёный чай с молоком',
-                'image' => 'menu/matcha_latte.jpg',
+                'image' => 'images/menu/matcha_latte.jpg',
             ],
             [
                 'name' => 'Облепиховый чай',
                 'price' => 240,
                 'description' => 'Витаминный чай с апельсином',
-                'image' => 'menu/sea_buckthorn_tea.jpg',
+                'image' => 'images/menu/sea_buckthorn_tea.jpg',
             ],
             [
                 'name' => 'Какао с маршмеллоу',
                 'price' => 220,
                 'description' => 'Горячее какао с нежным маршмеллоу',
-                'image' => 'menu/cocoa_marshmallow.jpg',
+                'image' => 'images/menu/cocoa_marshmallow.jpg',
             ],
         ],
         'breakfast' => [
@@ -83,19 +83,19 @@ class MenuSeeder extends Seeder
                 'name' => 'Авокадо-тост с яйцом',
                 'price' => 390,
                 'description' => 'Тост с авокадо, яйцом пашот и семенами чиа',
-                'image' => 'menu/avocado_toast.jpg',
+                'image' => 'images/menu/avocado_toast.jpg',
             ],
             [
                 'name' => 'Сэндвич с курицей и песто',
                 'price' => 350,
                 'description' => 'Сытный сэндвич с курицей, песто и рукколой',
-                'image' => 'menu/chicken_pesto_sandwich.jpg',
+                'image' => 'images/menu/chicken_pesto_sandwich.jpg',
             ],
             [
                 'name' => 'Бейгл с лососем',
                 'price' => 450,
                 'description' => 'Бейгл с лососем, сливочным сыром и каперсами',
-                'image' => 'menu/salmon_bagel.jpg',
+                'image' => 'images/menu/salmon_bagel.jpg',
             ],
         ],
         'desserts' => [
@@ -103,13 +103,13 @@ class MenuSeeder extends Seeder
                 'name' => 'Тирамису',
                 'price' => 320,
                 'description' => 'Классический итальянский десерт',
-                'image' => 'menu/tiramisu.jpg',
+                'image' => 'images/menu/tiramisu.jpg',
             ],
             [
                 'name' => 'Медовик',
                 'price' => 280,
                 'description' => 'Классический медовый торт со сметанным кремом',
-                'image' => 'menu/honey_cake.jpg',
+                'image' => 'images/menu/honey_cake.jpg',
             ],
         ],
     ];

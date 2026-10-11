@@ -88,3 +88,20 @@ html {
     }
 }
 
+/* Нативные поля даты и времени: иконки календаря и часов должны быть ярко-белыми
+   на тёмном фоне. brightness(0) + invert(1) делают иконку гарантированно белой
+   независимо от исходного цвета, который задаёт браузер. */
+input[type='date'],
+input[type='datetime-local'],
+input[type='time'] {
+    color-scheme: dark;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='datetime-local']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(1);
+    opacity: 1;
+    cursor: pointer;
+}
+

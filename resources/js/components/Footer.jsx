@@ -44,8 +44,7 @@ export default function Footer({ onLeadClick }) {
 
                 <div>
                     <p className="mb-4 font-medium text-amber-500">Часы работы</p>
-                    <p className="text-sm text-amber-50/80">Пн–Пт: 08:00 – 22:00</p>
-                    <p className="text-sm text-amber-50/80">Сб–Вс: 09:00 – 23:00</p>
+                    <p className="text-sm text-amber-50/80">Ежедневно: 08:00 – 22:00</p>
 
                     <div className="mt-4 flex flex-wrap gap-3">
                         {socials.map((social) => (

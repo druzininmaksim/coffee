@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import NameInput, { validateName } from '../components/NameInput';
+import PhoneInput from '../components/PhoneInput';
 import { useAuth } from '../context/AuthContext';
 
 const initialForm = { name: '', email: '', phone: '', password: '' };
@@ -9,15 +11,32 @@ export default function Register() {
     const navigate = useNavigate();
     const [form, setForm] = useState(initialForm);
     const [error, setError] = useState(null);
+    const [nameError, setNameError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
         setForm((previous) => ({ ...previous, [name]: value }));
+
+        // Пока пользователь исправляет поле, пересчитываем ошибку имени.
+        if (name === 'name' && nameError) {
+            setNameError(validateName(value));
+        }
     };
+
+    const handleNameBlur = () => setNameError(validateName(form.name));
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const invalidName = validateName(form.name);
+
+        setNameError(invalidName);
+
+        if (invalidName) {
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
 
@@ -45,11 +64,12 @@ export default function Register() {
                 </p>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                    <input
-                        type="text"
+                    <NameInput
                         name="name"
                         value={form.name}
                         onChange={handleChange}
+                        onBlur={handleNameBlur}
+                        error={nameError}
                         placeholder="Имя"
                         required
                         autoComplete="name"
@@ -65,15 +85,11 @@ export default function Register() {
                         autoComplete="email"
                         className="mb-4 rounded-lg border border-stone-700 bg-stone-900 px-4 py-2 text-amber-50 outline-none focus:border-amber-600"
                     />
-                    <input
-                        type="tel"
+                    <PhoneInput
                         name="phone"
                         value={form.phone}
                         onChange={handleChange}
-                        placeholder="+7 (999) 123-45-67"
-                        pattern="[0-9+\s\-\(\)]{10,20}"
-                        title="Введите номер телефона в формате +7 (999) 123-45-67"
-                        autoComplete="tel"
+                        required
                         className="mb-4 rounded-lg border border-stone-700 bg-stone-900 px-4 py-2 text-amber-50 outline-none focus:border-amber-600"
                     />
                     <input

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
+import NameInput, { validateName } from './NameInput';
+import PhoneInput from './PhoneInput';
 
 const initialForm = { name: '', phone: '', email: '', message: '' };
 
@@ -7,12 +9,14 @@ export default function LeadModal({ open, onClose }) {
     const [form, setForm] = useState(initialForm);
     const [status, setStatus] = useState('idle');
     const [error, setError] = useState(null);
+    const [nameError, setNameError] = useState(null);
 
     useEffect(() => {
         if (!open) {
             setForm(initialForm);
             setStatus('idle');
             setError(null);
+            setNameError(null);
         }
     }, [open]);
 
@@ -37,10 +41,26 @@ export default function LeadModal({ open, onClose }) {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setForm((previous) => ({ ...previous, [name]: value }));
+
+        // Пока пользователь исправляет поле, пересчитываем ошибку имени.
+        if (name === 'name' && nameError) {
+            setNameError(validateName(value));
+        }
     };
+
+    const handleNameBlur = () => setNameError(validateName(form.name));
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const invalidName = validateName(form.name);
+
+        setNameError(invalidName);
+
+        if (invalidName) {
+            return;
+        }
+
         setStatus('loading');
         setError(null);
 
@@ -83,23 +103,20 @@ export default function LeadModal({ open, onClose }) {
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                        <input
-                            type="text"
+                        <NameInput
                             name="name"
                             value={form.name}
                             onChange={handleChange}
+                            onBlur={handleNameBlur}
+                            error={nameError}
                             placeholder="Ваше имя"
                             required
                             className="mb-4 rounded-lg border border-stone-700 bg-stone-900 px-4 py-2 text-amber-50 outline-none focus:border-amber-600"
                         />
-                        <input
-                            type="tel"
+                        <PhoneInput
                             name="phone"
                             value={form.phone}
                             onChange={handleChange}
-                            placeholder="+7 (999) 123-45-67"
-                            pattern="[0-9+\s\-\(\)]{10,20}"
-                            title="Введите номер телефона в формате +7 (999) 123-45-67"
                             required
                             className="mb-4 rounded-lg border border-stone-700 bg-stone-900 px-4 py-2 text-amber-50 outline-none focus:border-amber-600"
                         />

@@ -16,6 +16,21 @@ class ReservationController extends Controller
     private const DEFAULT_DURATION_HOURS = 2;
 
     /**
+     * Минимальный запас времени между оформлением брони и визитом, часы.
+     */
+    private const MIN_LEAD_HOURS = 1;
+
+    /**
+     * Часы работы кофейни: первый доступный слот начала брони.
+     */
+    private const WORK_START_HOUR = 8;
+
+    /**
+     * Часы работы кофейни: последний доступный слот начала брони.
+     */
+    private const WORK_END_HOUR = 22;
+
+    /**
      * Reservation statuses that occupy a table.
      *
      * @var array<int, string>
@@ -39,6 +54,13 @@ class ReservationController extends Controller
 
         $duration = (int) ($validated['duration'] ?? self::DEFAULT_DURATION_HOURS);
         $start = Carbon::createFromFormat('Y-m-d H:i', $validated['date'].' '.$validated['time']);
+
+        if ($windowError = $this->bookingWindowError($start)) {
+            return response()->json([
+                'message' => $windowError,
+            ], 422);
+        }
+
         $end = $start->copy()->addHours($duration);
         $busyFrom = $start->copy()->subHours(self::DEFAULT_DURATION_HOURS);
 
@@ -68,15 +90,31 @@ class ReservationController extends Controller
     {
         $validated = $request->validate([
             'table_id' => ['required', 'integer', 'exists:tables,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'regex:/^\+?[0-9\s\-\(\)]{10,20}$/'],
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:255',
+                'regex:/^[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$/u',
+            ],
+            'phone' => ['required', 'string', 'regex:/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/'],
             'guests' => ['required', 'integer', 'min:1'],
-            'reserved_at' => ['required', 'date', 'after:now'],
+            'reserved_at' => ['required', 'date'],
             'comment' => ['nullable', 'string', 'max:1000'],
+        ], [
+            'name.regex' => 'Имя может содержать только буквы, пробелы и дефисы',
+            'name.min' => 'Имя должно быть не короче 2 символов',
         ]);
 
         $table = Table::findOrFail($validated['table_id']);
         $start = Carbon::parse($validated['reserved_at']);
+
+        if ($windowError = $this->bookingWindowError($start)) {
+            return response()->json([
+                'message' => $windowError,
+            ], 422);
+        }
+
         $end = $start->copy()->addHours(self::DEFAULT_DURATION_HOURS);
 
         if (! $table->is_active) {
@@ -157,6 +195,24 @@ class ReservationController extends Controller
             'message' => 'Бронь отменена',
             'reservation' => $reservation->load('table'),
         ]);
+    }
+
+    /**
+     * Проверяет, что время визита попадает в допустимый интервал бронирования.
+     *
+     * Возвращает текст ошибки либо null, если время допустимо.
+     */
+    private function bookingWindowError(Carbon $start): ?string
+    {
+        if ($start->lt(now()->addHours(self::MIN_LEAD_HOURS))) {
+            return 'Бронировать столик можно не раньше чем за час до визита';
+        }
+
+        if ($start->hour < self::WORK_START_HOUR || $start->hour > self::WORK_END_HOUR) {
+            return 'Мы принимаем брони только в часы работы: с 08:00 до 22:00';
+        }
+
+        return null;
     }
 
     /**

@@ -1,9 +1,31 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/client';
+import NameInput, { validateName } from '../components/NameInput';
+import PhoneInput, { PHONE_PATTERN } from '../components/PhoneInput';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../utils/format';
+
+const PHONE_REGEX = new RegExp(PHONE_PATTERN);
+
+/**
+ * Проверяет телефон по маске +7 (999) 123-45-67.
+ * Возвращает текст ошибки либо null, если номер корректный.
+ */
+function validatePhone(value) {
+    const trimmed = String(value ?? '').trim();
+
+    if (!trimmed) {
+        return 'Укажите номер телефона';
+    }
+
+    if (!PHONE_REGEX.test(trimmed)) {
+        return 'Введите номер телефона в формате +7 (999) 123-45-67';
+    }
+
+    return null;
+}
 
 export default function Checkout() {
     const { user } = useAuth();
@@ -18,6 +40,8 @@ export default function Checkout() {
     }));
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
+    const [nameError, setNameError] = useState(null);
+    const [phoneError, setPhoneError] = useState(null);
     const [promoInput, setPromoInput] = useState('');
     const [promo, setPromo] = useState(null);
     const [promoMessage, setPromoMessage] = useState(null);
@@ -35,7 +59,20 @@ export default function Checkout() {
         const { name, value } = event.target;
 
         setForm((previous) => ({ ...previous, [name]: value }));
+
+        // Пока пользователь исправляет поле, пересчитываем ошибку.
+        if (name === 'name' && nameError) {
+            setNameError(validateName(value));
+        }
+
+        if (name === 'phone' && phoneError) {
+            setPhoneError(validatePhone(value));
+        }
     };
+
+    const handleNameBlur = () => setNameError(validateName(form.name));
+
+    const handlePhoneBlur = () => setPhoneError(validatePhone(form.phone));
 
     const handleApplyPromocode = async () => {
         if (!promoInput.trim()) {
@@ -64,6 +101,17 @@ export default function Checkout() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const invalidName = validateName(form.name);
+        const invalidPhone = validatePhone(form.phone);
+
+        setNameError(invalidName);
+        setPhoneError(invalidPhone);
+
+        if (invalidName || invalidPhone) {
+            return;
+        }
+
         setIsSubmitting(true);
         setError(null);
 
@@ -141,29 +189,33 @@ export default function Checkout() {
 
                             <label className="mb-4 block">
                                 <span className="mb-2 block text-sm text-amber-50/70">Имя</span>
-                                <input
-                                    type="text"
+                                <NameInput
                                     name="name"
                                     value={form.name}
                                     onChange={handleChange}
+                                    onBlur={handleNameBlur}
+                                    error={nameError}
+                                    placeholder="Имя"
                                     required
+                                    autoComplete="name"
                                     className={inputClass}
                                 />
                             </label>
 
                             <label className="mb-4 block">
                                 <span className="mb-2 block text-sm text-amber-50/70">Телефон</span>
-                                <input
-                                    type="tel"
+                                <PhoneInput
                                     name="phone"
                                     value={form.phone}
                                     onChange={handleChange}
+                                    onBlur={handlePhoneBlur}
                                     required
                                     placeholder="+7 (999) 123-45-67"
-                                    pattern="[0-9+\s\-\(\)]{10,20}"
-                                    title="Введите номер телефона в формате +7 (999) 123-45-67"
                                     className={inputClass}
                                 />
+                                {phoneError && (
+                                    <p className="mb-0 mt-1 text-sm text-red-400">{phoneError}</p>
+                                )}
                             </label>
 
                             {form.type === 'delivery' && (

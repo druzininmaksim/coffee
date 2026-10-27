@@ -37,7 +37,7 @@ export default function Home() {
         <div className="px-4 py-8">
             <section className="mx-auto mb-4 max-w-6xl">
                 <div className="relative overflow-hidden rounded-lg shadow-md">
-                    <img src={HERO_IMAGE} alt="Кофейня Roast & Co" className="h-96 w-full object-cover" />
+                    <img src={HERO_IMAGE} alt="Кофейня Roast & Co" className="h-[400px] w-full object-cover md:h-[600px]" />
                     <div className="absolute inset-0 bg-stone-900/70" />
                     <span
                         aria-hidden="true"
@@ -117,7 +117,7 @@ export default function Home() {
                                     src={menuImageUrl(promotion.image)}
                                     alt={promotion.title}
                                     loading="lazy"
-                                    className="h-40 w-full object-cover"
+                                    className="aspect-square w-full object-cover"
                                 />
                                 <div className="flex flex-1 flex-col gap-3 p-4">
                                     <h3 className="mb-0 text-lg font-semibold text-amber-500">
@@ -150,11 +150,11 @@ export default function Home() {
             </section>
 
             <section className="mx-auto max-w-6xl py-8">
-                <div className="grid items-center gap-6 md:grid-cols-2">
+                <div className="grid items-stretch gap-6 md:grid-cols-2">
                     <img
                         src={ABOUT_IMAGE}
                         alt="Интерьер кофейни"
-                        className="h-80 w-full rounded-lg object-cover shadow-md"
+                        className="h-full w-full rounded-lg object-cover shadow-md"
                     />
                     <div className="flex flex-col gap-6">
                         <h2 className="mb-0 text-2xl font-semibold md:text-3xl">О нас</h2>

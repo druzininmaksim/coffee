@@ -40,7 +40,7 @@ export default function MenuItemCard({ item, index = 0, isHit = false }) {
                 src={dishImage(item)}
                 alt={item.name}
                 loading="lazy"
-                className="h-48 w-full object-cover"
+                className="aspect-square w-full object-cover"
             />
             <div className="flex flex-1 flex-col gap-3 p-4">
                 <h3 className="mb-0 text-lg font-semibold">{item.name}</h3>

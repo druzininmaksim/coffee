@@ -52,14 +52,27 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'type' => ['required', 'in:pickup,delivery'],
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'regex:/^\+?[0-9\s\-\(\)]{10,20}$/'],
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:255',
+                'regex:/^[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$/u',
+            ],
+            'phone' => ['required', 'string', 'regex:/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/'],
             'address' => ['required_if:type,delivery', 'nullable', 'string', 'max:500'],
             'comment' => ['nullable', 'string', 'max:1000'],
             'promocode' => ['nullable', 'string', 'max:50'],
             'subtotal' => ['nullable', 'numeric', 'min:0'],
             'discount' => ['nullable', 'numeric', 'min:0'],
             'total' => ['nullable', 'numeric', 'min:0'],
+        ], [
+            'name.required' => 'Укажите имя',
+            'name.min' => 'Имя должно быть не короче 2 символов',
+            'name.max' => 'Имя не должно быть длиннее 255 символов',
+            'name.regex' => 'Имя может содержать только буквы, пробелы и дефисы',
+            'phone.required' => 'Укажите номер телефона',
+            'phone.regex' => 'Введите номер телефона в формате +7 (999) 123-45-67',
         ]);
 
         $user = $request->user();

@@ -69,7 +69,7 @@ export default function Menu() {
                                 key={index}
                                 className="mb-4 overflow-hidden rounded-lg bg-stone-800 shadow-md"
                             >
-                                <div className="h-48 w-full animate-pulse bg-stone-700" />
+                                <div className="aspect-square w-full animate-pulse bg-stone-700" />
                                 <div className="flex flex-col gap-3 p-4">
                                     <div className="h-5 w-2/3 animate-pulse rounded bg-stone-700" />
                                     <div className="h-4 w-full animate-pulse rounded bg-stone-700/70" />

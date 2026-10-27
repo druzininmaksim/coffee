@@ -73,7 +73,7 @@ export default function Register() {
                         placeholder="Имя"
                         required
                         autoComplete="name"
-                        className="mb-4 rounded-lg border border-stone-700 bg-stone-900 px-4 py-2 text-amber-50 outline-none focus:border-amber-600"
+                        className="mb-4 w-full rounded-lg border border-stone-700 bg-stone-900 px-4 py-2 text-amber-50 outline-none focus:border-amber-600"
                     />
                     <input
                         type="email"

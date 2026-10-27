@@ -31,12 +31,12 @@ export default function About() {
                     <img
                         src={ABOUT_IMAGE}
                         alt="Обжарка кофе"
-                        className="h-80 w-full rounded-lg object-cover shadow-md"
+                        className="h-[400px] w-full rounded-lg object-cover shadow-md md:h-[600px]"
                     />
                     <img
                         src={CONTACTS_IMAGE}
                         alt="Бариста за работой"
-                        className="h-80 w-full rounded-lg object-cover shadow-md"
+                        className="h-[400px] w-full rounded-lg object-cover shadow-md md:h-[600px]"
                     />
                 </div>
 
